@@ -34,3 +34,5 @@ next-env.d.ts
 
 # CSV data files (optionnel, pour ne pas commiter les données sensibles)
 *.csv
+public/data/electeurs.csv
+public/data/*.csv

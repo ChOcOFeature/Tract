@@ -40,7 +40,7 @@ export default function TractageApp() {
 
   const loadCSVData = async () => {
     try {
-      const response = await fetch('/data/electeurs.csv');
+      const response = await fetch('/api/electeurs', { cache: 'no-store' });
       const csvText = await response.text();
       
       Papa.parse(csvText, {
