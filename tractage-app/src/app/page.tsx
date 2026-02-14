@@ -19,6 +19,7 @@ export default function TractageApp() {
   const [loading, setLoading] = useState(true);
   const [filterSegment, setFilterSegment] = useState<string>('all');
   const [visibleCount, setVisibleCount] = useState(200);
+  const [mobileTab, setMobileTab] = useState<'liste' | 'carte'>('liste');
 
   // Charger les données au montage
   useEffect(() => {
@@ -37,6 +38,12 @@ export default function TractageApp() {
   useEffect(() => {
     setVisibleCount(200);
   }, [debouncedSearch, filterSegment]);
+
+  useEffect(() => {
+    if (selectedFoyer) {
+      setMobileTab('carte');
+    }
+  }, [selectedFoyer]);
 
   const loadCSVData = async () => {
     try {
@@ -174,9 +181,9 @@ export default function TractageApp() {
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+        <aside className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden md:h-full">
           {/* Status Section */}
           <div className="p-4 border-b border-gray-200 bg-gray-50">
             {loading ? (
@@ -193,10 +200,38 @@ export default function TractageApp() {
             )}
           </div>
 
+          {/* Mobile Tabs */}
+          <div className="md:hidden border-b border-gray-200 bg-white">
+            <div className="grid grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setMobileTab('liste')}
+                className={`px-4 py-3 text-sm font-semibold ${
+                  mobileTab === 'liste'
+                    ? 'text-primary-700 border-b-2 border-primary-600 bg-primary-50'
+                    : 'text-gray-600'
+                }`}
+              >
+                Recherche & liste
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileTab('carte')}
+                className={`px-4 py-3 text-sm font-semibold ${
+                  mobileTab === 'carte'
+                    ? 'text-primary-700 border-b-2 border-primary-600 bg-primary-50'
+                    : 'text-gray-600'
+                }`}
+              >
+                Carte
+              </button>
+            </div>
+          </div>
+
           {foyers.length > 0 && (
             <>
               {/* Search & Filters */}
-              <div className="p-4 space-y-3 border-b border-gray-200">
+              <div className={`p-4 space-y-3 border-b border-gray-200 ${mobileTab === 'carte' ? 'hidden md:block' : ''}`}>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -221,7 +256,7 @@ export default function TractageApp() {
               </div>
 
               {/* Foyers List */}
-              <div className="flex-1 overflow-y-auto">
+              <div className={`flex-1 overflow-y-auto ${mobileTab === 'carte' ? 'hidden md:block' : ''}`}>
                 {filteredFoyers.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
                     <Users className="w-12 h-12 mx-auto mb-2 opacity-50" />
@@ -289,7 +324,7 @@ export default function TractageApp() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col overflow-hidden">
+        <main className={`flex-1 flex flex-col overflow-hidden min-h-[50vh] md:min-h-0 ${mobileTab === 'liste' ? 'hidden md:flex' : ''}`}>
           {/* Map */}
           <div className="flex-1">
             <MapComponent 
