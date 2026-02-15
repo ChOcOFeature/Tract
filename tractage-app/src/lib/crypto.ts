@@ -1,7 +1,6 @@
 import crypto from 'node:crypto';
-import zlib from 'node:zlib';
 
-const VERSION = 2;
+const VERSION = 1;
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
 const TAG_LENGTH = 16;
@@ -11,13 +10,12 @@ function deriveKey(passphrase: string, salt: Buffer) {
 }
 
 export function encryptBuffer(plain: Buffer, passphrase: string) {
-  const compressed = zlib.gzipSync(plain);
   const salt = crypto.randomBytes(SALT_LENGTH);
   const iv = crypto.randomBytes(IV_LENGTH);
   const key = deriveKey(passphrase, salt);
 
   const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-  const ciphertext = Buffer.concat([cipher.update(compressed), cipher.final()]);
+  const ciphertext = Buffer.concat([cipher.update(plain), cipher.final()]);
   const tag = cipher.getAuthTag();
 
   return Buffer.concat([
@@ -53,6 +51,5 @@ export function decryptBuffer(encrypted: Buffer, passphrase: string) {
   const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
   decipher.setAuthTag(tag);
 
-  const compressed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-  return zlib.gunzipSync(compressed);
+  return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
 }
