@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
+import { decryptBuffer } from '@/lib/crypto';
 
 export const runtime = 'nodejs';
 
 export async function GET() {
   const blobUrl = process.env.ELECTEURS_BLOB_URL;
   const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const passphrase = process.env.ELECTEURS_PASSPHRASE;
 
-  if (!blobUrl || !token) {
+  if (!blobUrl || !token || !passphrase) {
     return NextResponse.json(
       { error: 'Configuration manquante pour le CSV.' },
       { status: 500 }
@@ -27,7 +29,17 @@ export async function GET() {
     );
   }
 
-  const csvText = await response.text();
+  const encryptedBuffer = Buffer.from(await response.arrayBuffer());
+
+  let csvText = '';
+  try {
+    csvText = decryptBuffer(encryptedBuffer, passphrase).toString('utf8');
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Impossible de dechiffrer le CSV.' },
+      { status: 500 }
+    );
+  }
 
   return new NextResponse(csvText, {
     headers: {

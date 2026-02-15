@@ -141,6 +141,26 @@ NEXT_PUBLIC_MAP_CENTER_LAT=46.4959
 NEXT_PUBLIC_MAP_CENTER_LON=-1.7842
 ```
 
+### CSV chiffré + Vercel Blob
+
+Le backend lit un fichier CSV chiffré stocké dans Vercel Blob, puis le déchiffre côté serveur.
+
+1. Chiffrer localement le CSV
+
+```bash
+node scripts/encrypt-electeurs.mjs --in public/data/electeurs.csv --out public/data/electeurs.enc --passphrase "votre-passphrase"
+```
+
+2. Uploader le fichier chiffré dans Vercel Blob (via dashboard ou CLI) et récupérer l'URL du blob.
+
+3. Configurer les variables d'environnement (ex: .env.local)
+
+```env
+ELECTEURS_BLOB_URL=https://.../electeurs.enc
+BLOB_READ_WRITE_TOKEN=vercel_blob_token_...
+ELECTEURS_PASSPHRASE=votre-passphrase
+```
+
 ### Personnalisation des segments
 
 Modifiez `src/types/index.ts` pour ajuster :
