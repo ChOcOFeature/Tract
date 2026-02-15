@@ -36,3 +36,7 @@ next-env.d.ts
 *.csv
 public/data/electeurs.csv
 public/data/*.csv
+
+# Encrypted data files (sensibles)
+public/data/electeurs.enc
+*.enc
