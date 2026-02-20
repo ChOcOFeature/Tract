@@ -129,6 +129,14 @@ export const SEGMENTS: Record<string, MessageTemplate> = {
   }
 };
 
+export interface FAQItem {
+  id: string;
+  categorie: string;
+  question: string;
+  reponse: string;
+  segments?: string[];
+}
+
 export const getSegmentKey = (segment: string): string => {
   if (segment.includes('Jeunes (18-25')) return 'jeunes';
   if (segment.includes('Jeunes actifs natifs')) return 'jeunes-actifs-natifs';

@@ -171,13 +171,23 @@ export default function TractageApp() {
       {/* Header */}
       <header className="bg-primary-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <MapPin className="w-8 h-8" />
-            Tractage Electoral - Les Sables d'Olonne
-          </h1>
-          <p className="text-primary-100 text-sm mt-1">
-            Outil interactif de gestion de campagne électorale
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                <MapPin className="w-8 h-8" />
+                Tractage Electoral - Les Sables d'Olonne
+              </h1>
+              <p className="text-primary-100 text-sm mt-1">
+                Outil interactif de gestion de campagne électorale
+              </p>
+            </div>
+            <a
+              href="/faq"
+              className="px-4 py-2 bg-primary-700 hover:bg-primary-800 text-white rounded-lg font-medium transition-colors"
+            >
+              📘 FAQ
+            </a>
+          </div>
         </div>
       </header>
 
